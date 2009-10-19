@@ -2,7 +2,9 @@
 
 = Introduction =
 
-How to user ClickandBuy payment api?
+Payment gateway api class for clickandbuy. Process transaction using Clickandbuy marchant account. 
+
+This document will explain in details how you can use this api to process transaction with a clickandbuy marchant account.
 
 
 = Details =
@@ -32,7 +34,6 @@ $api = ClickandbuyAPI::getInstance($configs);
 ?>
 }}}
 
-
 ===Configuration Options: list of all configuration keys===
 
  - gateway
@@ -59,4 +60,116 @@ $api = ClickandbuyAPI::getInstance($configs);
       - set false to generate externalBDRID manually
 
 == Generate Clickandbuy Link ==
+{{{
+<?php
 
+// Get your ClickandBuy transaction parameters from database 
+$data = array( 
+               'cb_currency' => 'EUR', 
+               'lang' => 'en', 
+               'cb_billing_Nation' => 'UK', 
+               'price' => 100,   // price in cent
+               'cb_content_name_utf' => 'Yurssite.com', 
+               'cb_content_info_utf' => 'Yur product title',
+               'myUserId' => 10, // optional
+               'MyItemId' => 32, // optional
+            );
+
+// Construct clickandbuy payment link
+$url = $api->link($data);
+
+// now you can use this link in html anchor like:
+?>
+
+<a href="<?php echo $url; ?>">Pay using ClickandBuy</a>
+}}}
+
+== Transaction Check ==
+Verify transaction information and store uncommitted transaction data into your database.
+
+File: transaction_check.php
+{{{
+<?php
+  // verify transaction information
+  $checkData = $api->check(false);
+
+  if (!empty($checkData)) {
+      // check and insert server transaction data into database.
+      {
+          /**
+           * ... database insert code here....         *
+           */
+       }
+
+      // redirect to landing page for second handshake
+      header('Location: ' . $checkData['url']);
+      exit;      
+  }
+?>
+}}}
+_For details dump $checkData variable and see what data are available_
+
+== Transaction Returl ==
+File: transaction_return.php
+{{{
+$committed = $api->isCommitted();
+
+    if (!empty($committed)) {
+
+        // soap status
+
+        if ($committed['return'] == ture) {
+
+
+
+            {
+
+                /**
+
+                 * ... update transaction as completed ....
+
+                 */
+
+            }
+
+
+
+            echo "Transaction successfull!";
+
+        } else {
+
+            {
+
+                /**
+
+                 * ... update transaction as fault ....
+
+                 */
+
+            }
+
+            
+
+            echo "Transaction cancelled";
+
+        }
+
+
+
+        $api->pr($committed);
+
+        
+
+    } else {
+
+        // other errors
+
+        $api->pr($api->getErrors());
+
+        echo "Transaction cancelled";
+
+    }
+}}}
+
+
+== Work in progress ==
