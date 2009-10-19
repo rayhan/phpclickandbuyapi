@@ -22,7 +22,7 @@ include_once("clickandbuyapi.php");
 // Example Configurations:
 $configs = array(   'gateway' => array(
                            'gateway_url'   => 'https://eu.clickandbuy.com/newauth/http://premium-[your keys].eu.clickandbuy.com/',
-                           'return_url'	=> 'http://www.yourwebsite.com/clickandbuy_landing.php',
+                           'return_url'	=> 'http://www.yourwebsite.com/clickandbuy_return.php',
                            'sellerID' 		=> 'your sellerId',
                            'tmPassword' 	=> 'your tmPassword',
                            'dynkey'        => '',
