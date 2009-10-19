@@ -1,4 +1,5 @@
 #summary ClickandBuy API Example
+#labels Phase-Implementation,Featured
 
 <wiki:toc max_depth="2" />
 
@@ -7,6 +8,8 @@
 Payment gateway api class for clickandbuy. Process transaction using Clickandbuy marchant account. 
 
 This document will explain in details how you can use this api to process transaction with a clickandbuy marchant account.
+
+Requires: PHP5
 
 
 = Details =
