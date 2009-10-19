@@ -1,5 +1,7 @@
 #summary ClickandBuy API Example
 
+<wiki:toc max_depth="2" />
+
 = Introduction =
 
 Payment gateway api class for clickandbuy. Process transaction using Clickandbuy marchant account. 
@@ -34,6 +36,7 @@ $api = ClickandbuyAPI::getInstance($configs);
 ?>
 }}}
 
+----
 ===Configuration Options: list of all configuration keys===
 
  - gateway
@@ -58,6 +61,7 @@ $api = ClickandbuyAPI::getInstance($configs);
  - autoExternalBDRID
       - boolean [optional] default true
       - set false to generate externalBDRID manually
+----
 
 == Generate Clickandbuy Link ==
 {{{
@@ -83,23 +87,23 @@ $url = $api->link($data);
 
 <a href="<?php echo $url; ?>">Pay using ClickandBuy</a>
 }}}
+----
 
-== Transaction Check ==
-Verify transaction information and store uncommitted transaction data into your database.
+
+== Check Your Transaction ==
+Verify transaction information and store transaction data into your database with status  uncommitted.
 
 File: transaction_check.php
 {{{
 <?php
-  // verify transaction information
+  // verify transaction information and return all necessary data in array
   $checkData = $api->check(false);
 
   if (!empty($checkData)) {
       // check and insert server transaction data into database.
-      {
           /**
-           * ... database insert code here....         *
+           * ... database insert code here....
            */
-       }
 
       // redirect to landing page for second handshake
       header('Location: ' . $checkData['url']);
@@ -107,69 +111,56 @@ File: transaction_check.php
   }
 ?>
 }}}
-_For details dump $checkData variable and see what data are available_
+_For details dump $checkData variable and see what data are available. May be helpful in creating database schema and query_
+----
 
-== Transaction Returl ==
+== Transaction Return Page ==
+This page will call soap call isExternalBDRIDCommitted as second handshake to confirm the transaction.
+
 File: transaction_return.php
 {{{
+<?php
+// call soap method isExternalBDRIDCommitted and return all necessary information as array
 $committed = $api->isCommitted();
 
     if (!empty($committed)) {
-
         // soap status
-
         if ($committed['return'] == ture) {
-
-
-
-            {
-
                 /**
-
                  * ... update transaction as completed ....
-
                  */
-
-            }
-
-
 
             echo "Transaction successfull!";
-
         } else {
-
-            {
-
                 /**
-
                  * ... update transaction as fault ....
-
                  */
 
-            }
-
-            
-
             echo "Transaction cancelled";
-
         }
 
-
-
-        $api->pr($committed);
-
-        
+        $api->pr($committed); // dump result data
 
     } else {
-
         // other errors
-
-        $api->pr($api->getErrors());
-
         echo "Transaction cancelled";
 
+        $api->pr($api->getErrors()); // dump errors for debug
     }
+?>
 }}}
+----
 
 
-== Work in progress ==
+== Tips ==
+
+You can merge Transaction check and Transaction Returl page in file. See the example below:
+{{{
+<?php
+if (empty($_GET['result'])) {
+    // ... code for transaction check page ...
+} else {
+    // ... code for transaction landing page ....
+}
+?>
+}}}
