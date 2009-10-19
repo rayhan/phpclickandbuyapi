@@ -1,0 +1,62 @@
+#summary ClickandBuy API Example
+
+= Introduction =
+
+How to user ClickandBuy payment api?
+
+
+= Details =
+
+== Get Instance of ClickandbuyAPI class and set class options ==
+
+{{{
+<?php
+// Load class library
+include_once("clickandbuyapi.php");
+
+
+// Example Configurations:
+$configs = array(   'gateway' => array(
+                           'gateway_url'   => 'https://eu.clickandbuy.com/newauth/http://premium-[your keys].eu.clickandbuy.com/',
+                           'return_url'	=> 'http://www.yourwebsite.com/clickandbuy_landing.php',
+                           'sellerID' 		=> 'your sellerId',
+                           'tmPassword' 	=> 'your tmPassword',
+                           'dynkey'        => '',
+                       ),
+               'customParams' => array('myUserId', 'myItemId'),   // these parameters will be preserved.
+           );
+
+// get instance
+$api = ClickandbuyAPI::getInstance($configs);
+
+?>
+}}}
+
+
+===Configuration Options: list of all configuration keys===
+
+ - gateway
+      - array gateway information
+      - mandatory keys
+          - gateway_url
+              : string clickand buy gateway url
+          - return_url
+              : string your landing url
+          - sellerID
+              : string your clickandbuy seller ID
+          - tmPassword
+              : string your clickandbuy tmPassword
+          - dynkey
+              : string [optional] default ''
+
+ - customParams
+      - array [optional] default empty array
+      - your custom parameters to be available on landing page
+      - these data will be available on isCommited() return array.
+
+ - autoExternalBDRID
+      - boolean [optional] default true
+      - set false to generate externalBDRID manually
+
+== Generate Clickandbuy Link ==
+
