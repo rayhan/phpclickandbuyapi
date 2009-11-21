@@ -157,7 +157,7 @@ $committed = $api->isCommitted();
 
 == Tips ==
 
-You can merge Transaction check and Transaction Returl page in file. See the example below:
+You can merge Transaction check and Transaction Return URL in same location. See the example below:
 {{{
 <?php
 if (empty($_GET['result'])) {
