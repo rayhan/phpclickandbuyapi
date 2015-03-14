@@ -1,0 +1,1 @@
+PHP client library to integrate your site with Clickanbuy Merchant API.
